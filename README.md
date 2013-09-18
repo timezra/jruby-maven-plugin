@@ -30,10 +30,10 @@ For now, please use 'mvn timezra.maven:jruby-maven-plugin:1.7.4:help' to find ou
 
 ### Examples: ###
 
-    $ mvn timezra.maven:jruby-maven-plugin:1.7.4-SNAPSHOT:gem-install -Dgem_home=`pwd`/target/gems -Dgem=bundler -e
-    $ mvn timezra.maven:jruby-maven-plugin:1.7.4-SNAPSHOT:gem-list -Dgem_home=`pwd`/target/gems -e
-    $ mvn timezra.maven:jruby-maven-plugin:1.7.4-SNAPSHOT:bundle-init -Dgem_home=`pwd`/target/gems -e
-    $ mvn timezra.maven:jruby-maven-plugin:1.7.4-SNAPSHOT:bundle-install -Dgem_home=`pwd`/target/gems -Dgemfile=`pwd`/Gemfile -e
-    $ mvn timezra.maven:jruby-maven-plugin:1.7.4-SNAPSHOT:cli -Druby_version=2.0 -Dargs="-v"
-    $ mvn timezra.maven:jruby-maven-plugin:1.7.4-SNAPSHOT:cli -Dgem_home="`pwd`/target/gems" -Dargs="-S \"`pwd`/target/gems/bin/bundle\" show bundler"
+    $ mvn timezra.maven:jruby-maven-plugin:1.7.4:gem-install -Dgem_home=`pwd`/target/gems -Dgem=bundler -e
+    $ mvn timezra.maven:jruby-maven-plugin:1.7.4:gem-list -Dgem_home=`pwd`/target/gems -e
+    $ mvn timezra.maven:jruby-maven-plugin:1.7.4:bundle-init -Dgem_home=`pwd`/target/gems -e
+    $ mvn timezra.maven:jruby-maven-plugin:1.7.4:bundle-install -Dgem_home=`pwd`/target/gems -Dgemfile=`pwd`/Gemfile -e
+    $ mvn timezra.maven:jruby-maven-plugin:1.7.4:cli -Druby_version=2.0 -Dargs="-v"
+    $ mvn timezra.maven:jruby-maven-plugin:1.7.4:cli -Dgem_home="`pwd`/target/gems" -Dargs="-S \"`pwd`/target/gems/bin/bundle\" show bundler"
     
