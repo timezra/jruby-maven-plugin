@@ -4,12 +4,9 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 @Mojo(name = BundleInitMojo.API_METHOD)
-public class BundleInitMojo extends JRubyMojo {
+public class BundleInitMojo extends RequiresGemHome {
 
     static final String API_METHOD = "bundle-init";
-
-    @Parameter(required = true, property = "gem_home")
-    String gem_home;
 
     @Parameter(property = "gemspec")
     String gemspec;
@@ -22,8 +19,8 @@ public class BundleInitMojo extends JRubyMojo {
     protected String[] args() {
         // @formatter:off
         return gemspec == null ? 
-                new String[] { "-S", gem_home + "/bin/bundle", "init" } : 
-                new String[] { "-S", gem_home + "/bin/bundle", "init", "--gemspec=" + gemspec };
+                new String[] { "-S", getGemHome() + "/bin/bundle", "init" } : 
+                new String[] { "-S", getGemHome() + "/bin/bundle", "init", "--gemspec=" + gemspec };
         // @formatter:on
     }
 }

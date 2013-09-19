@@ -1,11 +1,15 @@
 package timezra.jruby.maven.plugin;
 
 import java.io.FileDescriptor;
+import java.util.Collections;
+import java.util.Hashtable;
+import java.util.Map;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.jruby.CompatVersion;
 import org.jruby.Main;
 import org.jruby.Main.Status;
 import org.jruby.Ruby;
@@ -19,18 +23,14 @@ import org.jruby.runtime.builtin.IRubyObject;
 
 public abstract class JRubyMojo extends AbstractMojo {
 
-    private static final String RUBY_VERSION = "jruby.compat.version";
-    private static final String GEM_HOME = "gem.home";
-
-    @Parameter(property = "gem_home")
-    String gem_home;
-
     @Parameter(property = "ruby_version")
     String ruby_version;
 
     private final String apiMethod;
 
     protected abstract String[] args() throws MojoExecutionException;
+
+    protected abstract String getGemHome();
 
     public JRubyMojo(final String apiMethod) {
         this.apiMethod = apiMethod;
@@ -44,11 +44,8 @@ public abstract class JRubyMojo extends AbstractMojo {
 
         final String[] args = args();
 
-        final String originalGemHome = replaceProperty(GEM_HOME, gem_home);
-        final String originalRubyVersion = replaceProperty(RUBY_VERSION, ruby_version);
-
         try {
-            final Main main = new Main(new RubyInstanceConfig());
+            final Main main = new Main(createConfig());
             final Status status = main.run(args);
             if (status.isExit()) {
                 handle(status.getStatus());
@@ -62,26 +59,26 @@ public abstract class JRubyMojo extends AbstractMojo {
                 getLog().error(ThreadContext.createRawBacktraceStringFromThrowable(t));
             }
             throw new MojoExecutionException("Exception caught when running " + apiMethod, t);
-        } finally {
-            setOrClearProperty(GEM_HOME, originalGemHome);
-            setOrClearProperty(RUBY_VERSION, originalRubyVersion);
         }
     }
 
-    private String replaceProperty(final String key, final String value) {
-        final String originalValue = System.getProperty(key);
-        if (value != null) {
-            System.setProperty(key, value);
+    private RubyInstanceConfig createConfig() {
+        final RubyInstanceConfig config = new RubyInstanceConfig();
+        final String gem_home = getGemHome();
+        if (gem_home != null || ruby_version != null) {
+            @SuppressWarnings("unchecked")
+            final Map<Object, Object> environment = config.getEnvironment();
+            final Hashtable<Object, Object> newEnvironment = new Hashtable<>(environment);
+            if (gem_home != null) {
+                newEnvironment.put("GEM_HOME", gem_home);
+            }
+            if (ruby_version != null) {
+                config.setCompatVersion(CompatVersion.getVersionFromString(ruby_version));
+                newEnvironment.put("RUBY_VERSION", ruby_version);
+            }
+            config.setEnvironment(Collections.unmodifiableMap(newEnvironment));
         }
-        return originalValue;
-    }
-
-    private void setOrClearProperty(final String key, final String value) {
-        if (value == null) {
-            System.clearProperty(key);
-        } else {
-            System.setProperty(key, value);
-        }
+        return config;
     }
 
     private void handle(final RaiseException re) throws MojoExecutionException {

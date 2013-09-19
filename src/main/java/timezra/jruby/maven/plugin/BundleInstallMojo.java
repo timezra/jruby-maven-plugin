@@ -4,12 +4,9 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 @Mojo(name = BundleInstallMojo.API_METHOD)
-public class BundleInstallMojo extends JRubyMojo {
+public class BundleInstallMojo extends RequiresGemHome {
 
     static final String API_METHOD = "bundle-install";
-
-    @Parameter(required = true, property = "gem_home")
-    String gem_home;
 
     @Parameter(required = true, property = "gemfile")
     String gemfile;
@@ -20,6 +17,6 @@ public class BundleInstallMojo extends JRubyMojo {
 
     @Override
     protected String[] args() {
-        return new String[] { "-S", gem_home + "/bin/bundle", "install", "--gemfile=" + gemfile };
+        return new String[] { "-S", getGemHome() + "/bin/bundle", "install", "--gemfile=" + gemfile };
     }
 }

@@ -7,7 +7,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 @Mojo(name = CliMojo.API_METHOD)
-public class CliMojo extends JRubyMojo {
+public class CliMojo extends OptionalGemHome {
 
     static final String API_METHOD = "cli";
 
