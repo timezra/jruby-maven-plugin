@@ -28,6 +28,11 @@ Work in progress....
 
 For now, please use 'mvn timezra.maven:jruby-maven-plugin:1.7.4:help' to find out usage information.
 
+### Note ###
+Because rvm sets the $GEM_HOME, $GEM_PATH and $RUBY_VERSION environment variables, if you do not wish to use these and wish to configure these values from the plugin, you will need to
+    
+    $ unset GEM_HOME; unset GEM_PATH; unset RUBY_VERSION
+
 ### Examples: ###
 
     $ mvn timezra.maven:jruby-maven-plugin:1.7.4:gem-install -Dgem_home=`pwd`/target/gems -Dgem=bundler -e
